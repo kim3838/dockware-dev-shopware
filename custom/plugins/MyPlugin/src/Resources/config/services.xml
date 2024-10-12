@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="MyPlugin\Command\ExampleCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="MyPlugin\ScheduledTask\ExampleTask">
+            <tag name="shopware.scheduled.task"/>
+        </service>
+
+        <service id="MyPlugin\Subscriber\MySubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="MyPlugin\Storefront\Controller\ExampleController" public="true">
+            <argument type="service" id="MyPlugin\Core\Content\Example\SalesChannel\ExampleRoute"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
+        <service id="MyPlugin\Storefront\Controller\MinimalOffCanvasCartLineItemController" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\LineItemFactoryRegistry"/>
+            <argument type="service" id="MyPlugin\Service\CustomCrossSellingService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
+        <service id="MyPlugin\Storefront\Controller\CheckoutController" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="Shopware\Storefront\Page\Checkout\Offcanvas\OffcanvasCartPageLoader"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
+        <service id="MyPlugin\Service\CustomCrossSellingService" />
+
+        <service id="MyPlugin\Core\Content\Example\SalesChannel\ExampleRoute">
+            <argument type="service" id="product.repository"/>
+        </service>
+
+        <service id="MyPlugin\Service\CustomFieldsInstaller">
+            <argument type="service" id="custom_field_set.repository"/>
+            <argument type="service" id="custom_field_set_relation.repository"/>
+        </service>
+
+    </services>
+</container>

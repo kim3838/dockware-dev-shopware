@@ -1,0 +1,13 @@
+{% block component_offcanvas_cart_cross_selling %}
+    <div class="offcanvas-cart-cross-selling">
+        <h3>{{ "checkout.crossSelling" | trans }}</h3>
+        {# Render the cross-selling items here #}
+        {% for product in crossSellingProducts %}
+            <div class="cross-selling-product">
+                {{ product.name }}
+                {{ product.price | currency }}
+                {# Add any other product details or buttons #}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

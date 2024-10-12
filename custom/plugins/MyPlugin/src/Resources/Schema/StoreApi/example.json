@@ -1,0 +1,48 @@
+{
+    "openapi": "3.0.0",
+    "info": [],
+    "paths": {
+        "/example": {
+            "post": {
+                "tags": [
+                    "Example",
+                    "Endpoints supporting Criteria "
+                ],
+                "summary": "Example entity endpoint",
+                "description": "Returns a list of example entities.",
+                "operationId": "example",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Criteria"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns a list of example entities.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Example"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ]
+            }
+        }
+    }
+}

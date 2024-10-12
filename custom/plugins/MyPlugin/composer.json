@@ -1,0 +1,27 @@
+{
+    "name": "my-plugin/my-plugin",
+    "description": "my-plugin/my-plugin",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "shopware/core": "~6.6.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "MyPlugin\\MyPlugin",
+        "label": {
+            "de-DE": "My plugin",
+            "en-GB": "My plugin"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "MyPlugin\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MyPlugin\\Tests\\": "tests/"
+        }
+    }
+}
