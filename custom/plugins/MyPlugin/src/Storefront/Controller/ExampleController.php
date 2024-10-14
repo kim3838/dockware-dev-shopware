@@ -19,7 +19,7 @@ class ExampleController extends StorefrontController
         $this->route = $route;
     }
 
-    #[Route(path: '/text/store-api/example', name: 'frontend.test.search', methods: ['GET', 'POST'], defaults: ['XmlHttpRequest' => 'true', '_entity' => 'product'])]
+    #[Route(path: '/test/store-api/example', name: 'frontend.test.search', methods: ['GET', 'POST'], defaults: ['XmlHttpRequest' => 'true', '_entity' => 'product'])]
     public function load(Criteria $criteria, SalesChannelContext $context): Response
     {
         return $this->route->load($criteria, $context);
