@@ -32,7 +32,6 @@
         <service id="MyPlugin\Storefront\Controller\MinimalOffCanvasCartLineItemController" public="true">
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\LineItemFactoryRegistry"/>
-            <argument type="service" id="MyPlugin\Service\CustomCrossSellingService"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
@@ -44,6 +43,8 @@
         <service id="MyPlugin\Storefront\Controller\CheckoutController" public="true">
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="Shopware\Storefront\Page\Checkout\Offcanvas\OffcanvasCartPageLoader"/>
+            <argument type="service" id="MyPlugin\Service\CustomCrossSellingService"/>
+            <argument type="service" id="MyPlugin\Storefront\Controller\ExampleController"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>

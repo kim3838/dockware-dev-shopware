@@ -2,8 +2,11 @@
 
 namespace MyPlugin\Storefront\Controller;
 
+use MyPlugin\Service\CustomCrossSellingService;
 use Shopware\Core\Checkout\Cart\Error\ErrorCollection;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Checkout\Cart\Error\PaymentMethodChangedError;
 use Shopware\Storefront\Checkout\Cart\Error\ShippingMethodChangedError;
@@ -22,6 +25,8 @@ class CheckoutController extends StorefrontController
     public function __construct(
         private readonly CartService $cartService,
         private readonly OffcanvasCartPageLoader $offcanvasCartPageLoader,
+        private readonly CustomCrossSellingService $customCrossSellingService,
+        private readonly ExampleController $exampleProductSearchController,
     ){}
 
     #[Route(path: '/checkout/offcanvas', name: 'frontend.cart.offcanvas', options: ['seo' => false], defaults: ['XmlHttpRequest' => true], methods: ['GET'])]
@@ -49,18 +54,35 @@ class CheckoutController extends StorefrontController
 
         $actionResponseFrom = $request->query->get('action_response_from');
         $uniqueItemAddCount = $request->query->get('unique_item_add_count');
-        $lastEngagedProductId = $request->query->get('last_engaged_product_id');
+        $lastEngagedProductId = $request->query->get('last_engaged_product_id') ?? null;
 
         $lastEngagedProductAction = in_array($actionResponseFrom, ['cart::add-line-item']);
 
         $showOnlyLastEngagedProduct = $lastEngagedProductAction && ($uniqueItemAddCount == 1);
 
+        $lastEngagedProductCrossSelling = $this->lastEngagedProductCrossSelling($context, $lastEngagedProductId);
+
         return $this->renderStorefront('@Storefront/storefront/component/checkout/offcanvas-cart.html.twig', [
             'page' => $page,
             'last_engaged_product_id' => $lastEngagedProductId,
+            'last_engaged_product_cross_selling' => $lastEngagedProductCrossSelling,
             'show_only_last_engaged_product' => $showOnlyLastEngagedProduct,
         ]);
     }
+
+    private function lastEngagedProductCrossSelling(SalesChannelContext $context, $productId = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('product.id', $productId));
+        $productRouteResponse = $this->exampleProductSearchController->load($criteria, $context);
+        $productEntityResponse = $productRouteResponse->getObject()->getEntities()->first();
+
+        return $this->customCrossSellingService->getCrossSellingProducts(
+            $productEntityResponse,
+            $context
+        );
+    }
+
 
     private function routeNeedsReload(ErrorCollection $cartErrors): bool
     {

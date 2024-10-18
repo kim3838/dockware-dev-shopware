@@ -143,12 +143,31 @@
                 {% endblock %}
             {% endif %}
 
-            {% if displayMode === 'offcanvas' %}
+            {% if displayMode === 'offcanvas' and showOnlyLastEngagedProduct %}
                 {% block component_offcanvas_cart_cross_selling %}
                     <div class="line-item-off-canvas-cross-selling" style="order:6; padding:0.25rem;">
-                        Off-canvas cross selling
-                        <div>Display mode {{displayMode }}</div>
-{#                        <div>Product {{dump(lineItem.payload) }}</div>#}
+
+                        {{ last_engaged_product_cross_selling.entity.name }}
+                        {% for crossSellingProduct in last_engaged_product_cross_selling.products %}
+                            {% if not crossSellingProduct.is_variant %}
+                                <div>
+                                    {% sw_thumbnails 'line-item-img-thumbnails' with {
+                                        media: crossSellingProduct.media,
+                                        sizes: {
+                                            default: '100px'
+                                        }
+                                    } %}
+                                    <div>{{ crossSellingProduct.name }}</div>
+                                    <div>{{ crossSellingProduct.price }}</div>
+
+                                    {% set product = crossSellingProduct.entity %}
+
+                                    {% block component_product_box_action %}
+                                        {% sw_include '@Storefront/storefront/component/product/card/action.html.twig' %}
+                                    {% endblock %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 {% endblock %}
             {% endif %}
