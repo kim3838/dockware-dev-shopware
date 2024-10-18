@@ -52,7 +52,11 @@
             </call>
         </service>
 
-        <service id="MyPlugin\Service\CustomCrossSellingService" />
+        <service id="MyPlugin\Service\CustomCrossSellingService">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="product_cross_selling.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService" />
+        </service>
 
         <service id="MyPlugin\Core\Content\Example\SalesChannel\ExampleRoute">
             <argument type="service" id="product.repository"/>
