@@ -2,6 +2,10 @@
 
 namespace MyPlugin\Command;
 
+use Symfony\Component\Console\Helper\Table;
+use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +17,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class ExampleCommand extends Command
 {
+    private $productEntityRepository;
+
+    public function __construct(EntityRepository $productEntityRepository)
+    {
+        parent::__construct(null);
+        $this->productEntityRepository = $productEntityRepository;
+    }
+
     // Provides a description, printed out in bin/console
     protected function configure(): void
     {
@@ -22,9 +34,20 @@ class ExampleCommand extends Command
     // Actual code executed in the command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('It works!');
+        $searchResult = $this->productEntityRepository->search(new Criteria(), Context::createDefaultContext());
 
-        // Exit code 0 for success
+        $table = new Table($output);
+        $table->setHeaders(['UUID','Name']);
+
+        foreach ($searchResult->getEntities() as $entity) {
+            $table->addRow([
+                $entity->getId(),
+                $entity->getName()
+            ]);
+        }
+
+        $table->render();
+
         return 0;
     }
 }
