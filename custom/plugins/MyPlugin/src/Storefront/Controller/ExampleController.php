@@ -24,12 +24,4 @@ class ExampleController extends StorefrontController
     {
         return $this->route->load($criteria, $context);
     }
-
-    #[Route(path: '/test/controller', name: 'frontend.test.controller', methods: ['GET'])]
-    public function test(Request $request, SalesChannelContext $context): Response
-    {
-        return $this->renderStorefront('@MyPlugin/storefront/page/example.html.twig', [
-            'controller' => 'ExampleController'
-        ]);
-    }
 }

@@ -2,7 +2,6 @@
 
 namespace MyPlugin\Storefront\Controller;
 
-use MyPlugin\Service\CustomCrossSellingService;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartException;
 use Shopware\Core\Checkout\Cart\Error\Error;
@@ -24,7 +23,6 @@ class MinimalOffCanvasCartLineItemController extends StoreFrontController
     public function __construct(
         private readonly CartService $cartService,
         private readonly LineItemFactoryRegistry $lineItemFactoryRegistry,
-        private readonly CustomCrossSellingService $customCrossSellingService
     ){}
 
     #[Route(path: '/checkout/line-item/add', name: 'frontend.checkout.line-item.add', defaults: ['XmlHttpRequest' => true], methods: ['POST'])]
@@ -147,21 +145,4 @@ class MinimalOffCanvasCartLineItemController extends StoreFrontController
 
         return $lineItemArray;
     }
-
-    #[Route(path: '/test/minimal-off-canvas/cross-selling', name: 'frontend.test.cross-selling', methods: ['GET'])]
-    public function cart(SalesChannelContext $context): Response{
-        $cartProductId = 1;
-        // Fetch cross-selling products for the cart
-        $crossSellingProducts = $this->customCrossSellingService->getCrossSellingProducts(
-            $cartProductId,
-            $context
-        );
-
-        // Render the off-canvas cart with cross-selling products
-        return $this->renderStorefront('@MyPlugin/storefront/page/example.html.twig', [
-            'param' => 'value',
-            'crossSellingProducts' => $crossSellingProducts
-        ]);
-    }
-
 }
